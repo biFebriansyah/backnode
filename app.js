@@ -1,6 +1,6 @@
 const express = require('express')
 const app = express()
-const routers = require('./src/routers/index')
+const routers = require('./src/router')
 const db = require('./src/config/db')
 
 app.use(express.json())

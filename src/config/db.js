@@ -1,10 +1,11 @@
 const { Pool } = require('pg')
 
 const pool = new Pool({
-    user: 'webgo',
-    host: 'localhost',
-    database: 'webgolang',
-    password: 'abcd1234'
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
+    user: process.env.DB_USER,
+    database: process.env.DB_NAME,
+    password: process.env.DB_PASSWORD
 })
 
 module.exports = pool
