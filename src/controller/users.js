@@ -1,10 +1,11 @@
 const ctrl = {}
 const model = require('../model/users')
 const respone = require('../utils/respon')
+const hash = require('../utils/hash')
 
 ctrl.fetchData = async (req, res) => {
     try {
-        const result = await model.getData()
+        const result = await model.getByUser(req.user)
         return respone(res, 200, result)
     } catch (error) {
         console.log(error)
@@ -14,7 +15,13 @@ ctrl.fetchData = async (req, res) => {
 
 ctrl.save = async (req, res) => {
     try {
-        const result = await model.saveData(req.body)
+        const hasPassword = await hash(req.body.password)
+        const params = {
+            ...req.body,
+            password: hasPassword
+        }
+
+        const result = await model.saveData(params)
         return respone(res, 200, result)
     } catch (error) {
         console.log(error)

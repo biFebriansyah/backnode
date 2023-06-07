@@ -36,8 +36,6 @@ function respon(res, status, result = '') {
         description: desc
     }
 
-    console.log(isObject(result))
-
     if (status >= 500) {
         results.error = result
     } else if (status >= 400 || typeof result == 'string') {

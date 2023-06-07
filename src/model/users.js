@@ -56,7 +56,7 @@ model.updateData = ({ username, password, email, userId }) => {
                 password = COALESCE(NULLIF($2, ''), password),
                 email = COALESCE(NULLIF($3, ''), email),
                 updated_at = now()
-            WHERE user_id = $4           
+            WHERE username = $4           
         `,
             [username, password, email, userId]
         )

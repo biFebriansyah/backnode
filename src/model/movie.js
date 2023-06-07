@@ -49,7 +49,7 @@ model.getBy = async ({ page, limit, orderBy, search }) => {
                         'id', mg.movie_genre_id,
                         'value', g.genre_name 
                     )
-                ) as genre, 
+                ) as genre,
                 mv.created_at, 
                 mv.updated_at
             FROM public.movie mv
@@ -61,8 +61,8 @@ model.getBy = async ({ page, limit, orderBy, search }) => {
         `)
 
         const meta = {
-            next: count <= 0 ? null : page == Math.ceil(count / limit) ? null : page + 1,
-            prev: page == 1 ? null : page - 1,
+            next: count <= 0 ? null : page == Math.ceil(count / limit) ? null : Number(page) + 1,
+            prev: page == 1 ? null : Number(page) - 1,
             total: count
         }
 
