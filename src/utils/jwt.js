@@ -7,7 +7,7 @@ module.exports = {
             role: 'admin'
         }
 
-        const token = jwt.sign(payload, process.env.SECRET, { expiresIn: '60s' })
+        const token = jwt.sign(payload, process.env.SECRET, { expiresIn: '1h' })
         return token
     }
 }

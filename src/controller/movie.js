@@ -29,6 +29,10 @@ ctrl.fetchBy = async (req, res) => {
 
 ctrl.save = async (req, res) => {
     try {
+        if (req.file !== undefined) {
+            req.body.banner = req.file.path
+        }
+
         const result = await model.save(req.body)
         return respone(res, 200, result)
     } catch (error) {

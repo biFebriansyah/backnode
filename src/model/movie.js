@@ -77,8 +77,8 @@ model.getBy = async ({ page, limit, orderBy, search }) => {
 }
 
 model.save = async ({ name, banner, release, genre }) => {
+    const pg = await db.connect()
     try {
-        const pg = await db.connect()
         await pg.query('BEGIN')
 
         const movie = await pg.query(
@@ -88,7 +88,7 @@ model.save = async ({ name, banner, release, genre }) => {
             [name, banner, release]
         )
 
-        if (genre.length > 0) {
+        if (genre && genre.length > 0) {
             genre.map(async (v) => {
                 return await pg.query(
                     `
