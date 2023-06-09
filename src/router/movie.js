@@ -4,8 +4,13 @@ const ctrl = require('../controller/movie')
 const authCheck = require('../middleware/authCheck')
 const upload = require('../middleware/upload')
 
-route.get('/', authCheck, ctrl.fetchBy)
-route.post('/', authCheck, upload.single('image'), ctrl.save)
-route.put('/:id', ctrl.patch)
+//? admin and user can accsess
+route.get('/', authCheck('admin', 'user'), ctrl.fetchBy)
+
+//! only admin can accsess
+route.post('/', authCheck('admin'), upload.single('image'), ctrl.save)
+
+//! only admin can accsess
+route.put('/:id', authCheck('admin'), ctrl.patch)
 
 module.exports = route
