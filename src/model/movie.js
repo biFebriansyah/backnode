@@ -1,5 +1,6 @@
 const db = require('../config/db')
 const escape = require('pg-format')
+const moment = require('moment')
 const model = {}
 
 model.getData = () => {
@@ -44,12 +45,7 @@ model.getBy = async ({ page, limit, orderBy, search }) => {
                 mv.movie_name,
                 mv.movie_banner,
                 mv.release_date,
-                json_agg(
-                    JSONB_BUILD_OBJECT(
-                        'id', mg.movie_genre_id,
-                        'value', g.genre_name 
-                    )
-                ) as genre,
+                string_agg(g.genre_name, ', ') AS genres,
                 mv.created_at, 
                 mv.updated_at
             FROM public.movie mv
@@ -69,6 +65,10 @@ model.getBy = async ({ page, limit, orderBy, search }) => {
         if (data.rows <= 0) {
             return 'data not found'
         } else {
+            data.rows.map((v) => {
+                const date = moment(v.release_date)
+                v.release_date = date.format('DD MMMM YYYY')
+            })
             return { data: data.rows, meta }
         }
     } catch (error) {

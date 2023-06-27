@@ -1,6 +1,10 @@
 const ctrl = {}
 const model = require('../model/movie')
 const respone = require('../utils/respon')
+const upload = require('../utils/upload')
+const moment = require('moment')
+
+const dateFormat = 'DD MMMM YYYY'
 
 ctrl.fetchData = async (req, res) => {
     try {
@@ -30,7 +34,7 @@ ctrl.fetchBy = async (req, res) => {
 ctrl.save = async (req, res) => {
     try {
         if (req.file !== undefined) {
-            req.body.banner = req.file.path
+            req.body.banner = await upload(req.file.path)
         }
 
         const result = await model.save(req.body)
