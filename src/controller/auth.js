@@ -6,14 +6,15 @@ const jwt = require('../utils/jwt')
 
 ctrl.Login = async (req, res) => {
     try {
-        const passDb = await model.getByUser(req.body.username)
+        const passDb = await model.getPassword(req.body.username)
+        console.log(passDb)
 
-        if (passDb.length <= 0) {
+        if (!passDb) {
             return respone(res, 401, 'username tidak terdaftar')
         }
 
         const passUser = req.body.password
-        const check = await bcrypt.compare(passUser, passDb[0].password)
+        const check = await bcrypt.compare(passUser, passDb)
 
         if (check) {
             const token = jwt.genToken(req.body.username)

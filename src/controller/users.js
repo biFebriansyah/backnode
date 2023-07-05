@@ -15,9 +15,15 @@ ctrl.fetchData = async (req, res) => {
 
 ctrl.save = async (req, res) => {
     try {
+        const isExsist = await model.dataExists(req.body.username)
+        if (isExsist) {
+            return respone(res, 400, 'username sudah terdaftar')
+        }
+
         const hasPassword = await hash(req.body.password)
         const params = {
             ...req.body,
+            fullname: `${req.body.firstname} ${req.body.lastname}`,
             password: hasPassword
         }
 

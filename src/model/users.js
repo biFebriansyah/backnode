@@ -18,9 +18,42 @@ model.getData = () => {
     })
 }
 
+model.getPassword = (username) => {
+    return new Promise((resolve, reject) => {
+        db.query('SELECT "password" FROM public.users WHERE username = $1', [username])
+            .then((res) => {
+                if (res.rows.length) {
+                    resolve(res.rows[0].password)
+                } else {
+                    resolve(false)
+                }
+            })
+            .catch((er) => {
+                reject(er)
+            })
+    })
+}
+
+model.dataExists = (username) => {
+    return new Promise((resolve, reject) => {
+        db.query('SELECT user_id FROM public.users WHERE username = $1', [username])
+            .then((res) => {
+                console.log(res.rows)
+                if (res.rows.length) {
+                    resolve(true)
+                } else {
+                    resolve(false)
+                }
+            })
+            .catch((er) => {
+                reject(er)
+            })
+    })
+}
+
 model.getByUser = (username) => {
     return new Promise((resolve, reject) => {
-        db.query('SELECT * FROM public.users WHERE username = $1', [username])
+        db.query('SELECT user_id, fullname, username, email, "role" FROM public.users WHERE username = $1', [username])
             .then((res) => {
                 resolve(res.rows)
             })
@@ -30,14 +63,14 @@ model.getByUser = (username) => {
     })
 }
 
-model.saveData = ({ username, password, email }) => {
+model.saveData = ({ fullname, username, password, email }) => {
     return new Promise((resolve, reject) => {
         db.query(
             `INSERT INTO public.users
-            (username, "password", email)
-            VALUES($1, $2, $3);            
+            (fullname, username, "password", email)
+            VALUES($1, $2, $3, $4);            
         `,
-            [username, password, email]
+            [fullname, username, password, email]
         )
             .then((res) => {
                 resolve(`${res.rowCount} user created`)

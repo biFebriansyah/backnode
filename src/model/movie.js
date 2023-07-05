@@ -15,15 +15,16 @@ model.getData = () => {
     })
 }
 
-model.getBy = async ({ page, limit, orderBy, search }) => {
+model.getBy = async ({ page, limit, orderBy, search, genre }) => {
     try {
         let filterQuery = ''
         let orderQuery = ''
         let metaQuery = ''
         let count = 0
 
-        if (search) {
-            filterQuery += escape('AND movie_name = %L', search)
+        if (search || genre) {
+            filterQuery += search ? escape('AND movie_name = %L', search) : ''
+            filterQuery += genre ? escape('AND LOWER(g.genre_name) = LOWER(%L)', genre) : ''
         }
 
         if (orderBy) {
@@ -35,7 +36,9 @@ model.getBy = async ({ page, limit, orderBy, search }) => {
             metaQuery += escape('LIMIT %s OFFSET %s', limit, offset)
         }
 
-        db.query(`SELECT COUNT(movie_id) as "count" FROM public.movie WHERE true ${filterQuery}`).then((v) => {
+        db.query(
+            `SELECT COUNT(mv.movie_id) as "count" FROM public.movie mv JOIN public.movie_genre mg ON mg.movie_id = mv.movie_id JOIN public.genre g ON mg.genre_id = g.genre_id WHERE true ${filterQuery}`
+        ).then((v) => {
             count = v.rows[0].count
         })
 
